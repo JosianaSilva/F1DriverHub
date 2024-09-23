@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -9,23 +9,34 @@ import { ThemedView } from '@/components/ThemedView';
 import SearchBar from '@/components/SearchBar';
 import fetchDrivers from '@/services/api';
 import Driver from '@/models/driver';
-
+import { getFavorites, addFavorite, removeFavorite, isFavorite } from '../../services/favorite';
 
 export default function HomeScreen() {
   const [driver, setDriver] = useState<Driver | null>(null);
-  const [favorites, setFavorites] = useState<Driver[]>([]);
+  const [isFav, setIsFav] = useState(false);
 
   const handleSearch = async (query: string) => {
     const result = await fetchDrivers(query);
     if (result) {
       setDriver(result[0]);
+      const favStatus = await isFavorite(result[0]);
+      setIsFav(favStatus);
     }
   };
 
-  const handleFavorite = () => {
-    if (driver && !favorites.includes(driver)) {
-      setFavorites([...favorites, driver]);
+  const handleFavorite = async () => {
+    if (driver) {
+      if (isFav) {
+        await removeFavorite(driver);
+      } else {
+        await addFavorite(driver);
+      }
+      const favStatus = await isFavorite(driver);
+      setIsFav(favStatus); // Atualiza o estado após a ação
     }
+
+    // const favorites = await getFavorites();
+    // console.log('Favorites:', favorites);
   };
 
   return (
@@ -54,7 +65,7 @@ export default function HomeScreen() {
           
           {/* Ícone de favorito */}
           <TouchableOpacity onPress={handleFavorite} style={styles.favoriteIcon}>
-            <Icon name="star" size={24} color="#FFD700" />
+            <Icon name="star" size={24} color={isFav ? "#FFD700" : "#C0C0C0"} />
           </TouchableOpacity>
         </View>
       )}

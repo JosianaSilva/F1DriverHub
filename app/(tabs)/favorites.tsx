@@ -1,35 +1,89 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
-
-// import { Collapsible } from '@/components/Collapsible';
-// import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { View, StyleSheet, Image, FlatList } from 'react-native';
+import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { getFavorites } from '@/services/favorite';
+import Driver from '@/models/driver';
 
 export default function TabTwoScreen() {
+  const [favorites, setFavorites] = useState<Driver[]>([]);
+
+  // Função para buscar os favoritos
+  const fetchFavorites = async () => {
+    const favoriteDrivers = await getFavorites();
+    setFavorites(favoriteDrivers);
+  };
+
+  // Recarregar a lista de favoritos toda vez que a aba for acessada
+  useFocusEffect(() => {
+    fetchFavorites();
+  });
+
+  const renderItem = ({ item }: { item: Driver }) => (
+
+    <ThemedView key={item.id} style={styles.card}>
+      <Image source={{ uri: item.img }} style={styles.driverImage} />
+      <ThemedText type="default">{item.nome}</ThemedText>
+      <ThemedText type="default">Pódios: {item.podiums}</ThemedText>
+      <ThemedText type="default">Títulos Mundiais: {item.world_championships}</ThemedText>
+      <ThemedText type="default">Nacionalidade: {item.nationality}</ThemedText>
+    </ThemedView>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="star" style={styles.headerImage} />}>
+    <View style={{ flex: 1 }}>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Favoritos✨</ThemedText>
       </ThemedView>
-      
-    </ParallaxScrollView>
+  
+      <FlatList
+        data={favorites}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        contentContainerStyle={styles.cardContainer}
+      />
+    </View>
   );
+  
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#FFD700',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
   titleContainer: {
     flexDirection: 'row',
-    gap: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 50,
+    top: 30,
+  },
+  cardContainer: {
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+    paddingBottom: 20,
+  },
+  card: {
+    width: 160,
+    margin: 8,
+    padding: 16,
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    alignItems: 'center',
+    elevation: 3,
+  },
+  driverImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10,
   },
 });
