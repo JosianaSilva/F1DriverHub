@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Appearance } from 'react-native';
 
 interface SearchBarProps {
     placeholder?: string;
@@ -17,16 +17,21 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search...", onSear
         onSearch(query);
     };
 
+    // Detect the current color scheme (light or dark)
+    const colorScheme = Appearance.getColorScheme();
+    const inputTextColor = colorScheme === 'dark' ? 'white' : 'black';
+
     return (
         <View style={styles.container}>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: inputTextColor }]}
                 value={query}
                 onChangeText={handleInputChange}
                 placeholder={placeholder}
                 onSubmitEditing={handleSearch}
+                placeholderTextColor={inputTextColor === 'black' ? '#aaa' : '#777'}
             />
-            <Button title="Search" onPress={handleSearch} />
+            <Button title="Buscar" onPress={handleSearch} color="#a00000" />
         </View>
     );
 };
@@ -43,7 +48,6 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         padding: 8,
         marginRight: 8,
-        color: 'white',
     },
 });
 

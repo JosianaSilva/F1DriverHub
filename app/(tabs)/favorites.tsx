@@ -22,13 +22,12 @@ export default function TabTwoScreen() {
   });
 
   const renderItem = ({ item }: { item: Driver }) => (
-
     <ThemedView key={item.id} style={styles.card}>
       <Image source={{ uri: item.img }} style={styles.driverImage} />
-      <ThemedText type="default">{item.nome}</ThemedText>
-      <ThemedText type="default">Pódios: {item.podiums}</ThemedText>
-      <ThemedText type="default">Títulos Mundiais: {item.world_championships}</ThemedText>
-      <ThemedText type="default">Nacionalidade: {item.nationality}</ThemedText>
+      <ThemedText type="default" style={styles.textBlack}>{item.nome}</ThemedText>
+      <ThemedText type="default" style={styles.textBlack}>Pódios: {item.podiums}</ThemedText>
+      <ThemedText type="default" style={styles.textBlack}>Títulos Mundiais: {item.world_championships}</ThemedText>
+      <ThemedText type="default" style={styles.textBlack}>Nacionalidade: {item.nationality}</ThemedText>
     </ThemedView>
   );
 
@@ -47,7 +46,6 @@ export default function TabTwoScreen() {
       />
     </View>
   );
-  
 }
 
 const styles = StyleSheet.create({
@@ -85,5 +83,8 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     marginBottom: 10,
+  },
+  textBlack: {
+    color: 'black', // Define a cor do texto como preta
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity } from 'react-native'; // Verifique se StyleSheet está aqui
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { HelloWave } from '@/components/HelloWave';
@@ -34,9 +34,6 @@ export default function HomeScreen() {
       const favStatus = await isFavorite(driver);
       setIsFav(favStatus); // Atualiza o estado após a ação
     }
-
-    // const favorites = await getFavorites();
-    // console.log('Favorites:', favorites);
   };
 
   return (
@@ -58,10 +55,10 @@ export default function HomeScreen() {
       {driver && (
         <View style={styles.card}>
           <Image source={{ uri: driver.img }} style={styles.driverImage} />
-          <ThemedText type="subtitle">{driver.nome}</ThemedText>
-          <ThemedText>Pódios: {driver.podiums}</ThemedText>
-          <ThemedText>Campeonatos Mundiais: {driver.world_championships}</ThemedText>
-          <ThemedText>Nacionalidade: {driver.nationality}</ThemedText>
+          <ThemedText type="subtitle" style={styles.textBlack}>{driver.nome}</ThemedText>
+          <ThemedText style={styles.textBlack}>Pódios: {driver.podiums}</ThemedText>
+          <ThemedText style={styles.textBlack}>Campeonatos Mundiais: {driver.world_championships}</ThemedText>
+          <ThemedText style={styles.textBlack}>Nacionalidade: {driver.nationality}</ThemedText>
           
           {/* Ícone de favorito */}
           <TouchableOpacity onPress={handleFavorite} style={styles.favoriteIcon}>
@@ -106,5 +103,8 @@ const styles = StyleSheet.create({
   },
   favoriteIcon: {
     marginTop: 10,
+  },
+  textBlack: {
+    color: 'black', // Define a cor do texto como preta
   },
 });
